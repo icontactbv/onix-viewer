@@ -39,6 +39,8 @@ the main branch.
   (List 139).
 
 ### Fixed
+- **About no longer offers "rules of your own".** Custom rules are not in
+  the shipped build.
 - **No dialect switch on Acknowledgement messages.** Their own elements have
   no short tags the viewer knows, so the conversion mixed the two dialects,
   and Copy XML and Download handed that out as ONIX.
