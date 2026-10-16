@@ -131,7 +131,8 @@ function parseLists(doc) {
     // the viewer can warn about codes that are still valid XML but shouldn't
     // be sent any more.
     const deprecated = [];
-    for (const c of list.Code || []) {
+    // A list with one code arrives as a bare object from Issue 75 on.
+    for (const c of [].concat(list.Code || [])) {
       const code = c.CodeValue;
       const label = (c.CodeDescription || "").trim();
       if (code == null || code === "" || !label) continue;
