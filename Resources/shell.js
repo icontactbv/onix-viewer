@@ -72,7 +72,7 @@
   </div>
   <div class="px-right">
     <!-- Which release the verdict is against, and the code-list issue it
-         rests on: "ONIX 3.1, Issue 74". viewer.js lists the bundled releases
+         rests on: "ONIX 3.1, Issue 75". viewer.js lists the bundled releases
          and selects the one the document declares. -->
     <span id="oxv-release-group">
       <select id="oxv-release" title="Validate against this ONIX release" aria-label="Validate against this ONIX release"></select>

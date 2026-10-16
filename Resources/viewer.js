@@ -1248,7 +1248,7 @@
   // ---- release selector -----------------------------------------------------
 
   // Which release the verdict is against, and the code-list issue it rests
-  // on — "ONIX 3.1, Issue 74", the two things the labels and the findings
+  // on — "ONIX 3.1, Issue 75", the two things the labels and the findings
   // come from. The document's own release is the default and the norm; the
   // other bundled release is a choice, for a feed about to move from 3.0 to
   // 3.1 — where <TitleText> becomes a deprecation and the Conference

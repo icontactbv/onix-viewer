@@ -3,7 +3,7 @@
 //
 // Every ONIX document in tests/fixtures/ and Onix/, plus EDItEUR's own sample
 // from the 3.1 bundle, is rewritten to declare 3.0 and then 3.1 and judged
-// twice: by libxml2 (xmllint --schema) against EDItEUR's Issue 74 schemas,
+// twice: by libxml2 (xmllint --schema) against EDItEUR's Issue 75 schemas,
 // and by Resources/onix-validate.js against the compiled model. The verdicts
 // must agree. Counts differ where libxml2 stops at the first fault inside an
 // element and skips the rest, so the verdict is the contract; both sides are
@@ -31,7 +31,7 @@ const path = require("path");
 const { execFileSync } = require("child_process");
 
 const ROOT = path.join(__dirname, "..");
-const ISSUE = 74;
+const ISSUE = 75;
 const RELEASES = ["3.0", "3.1"];
 const CACHE = argument("bundles") || path.join(ROOT, "dist", "oracle");
 

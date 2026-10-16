@@ -73,7 +73,7 @@ describe("Dialect toggle", () => {
     assert(pill.textContent.startsWith("ONIX"), "the icon adds no text");
     const select = w.document.getElementById("oxv-release");
     const shown = select.options[select.selectedIndex].textContent;
-    assert(shown === "ONIX 3.0, Issue 74", `got: ${shown}`);
+    assert(shown === "ONIX 3.0, Issue 75", `got: ${shown}`);
     assert(!shown.includes("EDItEUR"), "the vendor name is not needed here");
     assert(select.title.startsWith("Validate against this ONIX release"), `got: ${select.title}`);
   });

@@ -368,7 +368,7 @@ body:not(.px-search-open) #oxv-search-status { display: none; }
   color: inherit;
   font: inherit;
 }
-/* The release selector: "ONIX 3.1, Issue 74" — which content model the
+/* The release selector: "ONIX 3.1, Issue 75" — which content model the
    verdict is against and which code-list issue the labels come from. A
    native select in the toolbar buttons' box — their border, radius,
    padding and type — since it is a control, at a fixed width: it is

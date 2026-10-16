@@ -28,6 +28,15 @@ the main branch.
 - **A document that declares no release is validated as ONIX 3.0.** A
   standalone `<Product>` with no namespace used to start on an "Undeclared
   release" choice that checked no structure; ONIX 3.1 is the other option.
+- Codelists upgraded to **EDItEUR Issue 75** (was 74). 29 new codes,
+  including EPR registration numbers (Lists 44 and 92), packaging contacts
+  and documentation for the EU's packaging rules (Lists 184, 198 and 239),
+  LLM training (Lists 154 and 158), three manuscript and embargo dates
+  (List 163), `D512` JSON (List 178), `101G` EPUB 3.4 (List 220), eight
+  languages (List 74) and Äänel, Bookoutlet and Studentapan (List 139).
+  List 184 is retitled "EU Product Safety and related regulations".
+  Newly deprecated: `17` Softbox (List 80), BDBuzz and Sequencity
+  (List 139).
 
 ### Fixed
 - **No dialect switch on Acknowledgement messages.** Their own elements have

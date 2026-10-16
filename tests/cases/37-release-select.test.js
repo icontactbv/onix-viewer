@@ -30,7 +30,7 @@ describe("Release selector", () => {
 
   test("the selector lists both bundled releases and starts on the one the document declares", () => {
     const w = render("onix-3.1-valid.xml");
-    assert(options(w).join("|") === "3.0=ONIX 3.0, Issue 74|3.1=ONIX 3.1, Issue 74", `got ${options(w).join("|")}`);
+    assert(options(w).join("|") === "3.0=ONIX 3.0, Issue 75|3.1=ONIX 3.1, Issue 75", `got ${options(w).join("|")}`);
     assert(select(w).value === "3.1", `expected 3.1 selected, got ${select(w).value}`);
     assert(select(w).closest(".px-right"), "it sits in the right-hand group");
   });
@@ -109,7 +109,7 @@ describe("Release selector", () => {
     // A standalone <Product> with no namespace declares nothing; it is judged
     // against a real release rather than none.
     const w = render("onix-standalone-product-no-namespace.xml");
-    assert(options(w).join("|") === "3.0=ONIX 3.0, Issue 74|3.1=ONIX 3.1, Issue 74", `got ${options(w).join("|")}`);
+    assert(options(w).join("|") === "3.0=ONIX 3.0, Issue 75|3.1=ONIX 3.1, Issue 75", `got ${options(w).join("|")}`);
     assert(select(w).value === "3.0", `starts on 3.0; got ${select(w).value}`);
     assert(!pinned(w).includes("model.missing"), `structure is checked; got ${pinned(w).join()}`);
     assert(select(w).title.includes("declares no release"), `got "${select(w).title}"`);
@@ -122,14 +122,14 @@ describe("Release selector", () => {
     const w = renderSource(
       '<?xml version="1.0"?><ONIXMessage release="2.1"><Product>' +
       "<RecordReference>x</RecordReference></Product></ONIXMessage>", "onix-2.1.xml");
-    assert(options(w).join("|") === "2.1=ONIX 2.1, Issue 74|3.0=ONIX 3.0, Issue 74|3.1=ONIX 3.1, Issue 74",
+    assert(options(w).join("|") === "2.1=ONIX 2.1, Issue 75|3.0=ONIX 3.0, Issue 75|3.1=ONIX 3.1, Issue 75",
       `got ${options(w).join("|")}`);
     assert(select(w).value === "2.1");
   });
 
   test("an Acknowledgement names its release and the issue, and offers no other", () => {
     const w = render("onix-3.0-acknowledgement.xml");
-    assert(options(w).join("|") === "3.0=ONIX 3.0, Issue 74", `got ${options(w).join("|")}`);
+    assert(options(w).join("|") === "3.0=ONIX 3.0, Issue 75", `got ${options(w).join("|")}`);
     assert(select(w).disabled, "nothing to choose: it is never checked structurally");
     assert(select(w).title.includes("Acknowledgement"), `the title says why; got "${select(w).title}"`);
   });
@@ -151,7 +151,7 @@ describe("Release selector", () => {
           JSON.stringify({ "3.1": "chrome-extension://abc/onix-content-model-3.1.js", "3.0": url }));
       }, ["3.1"]);
     assert(w.OnixViewerValidation.availableVersions().join() === "3.1", "only 3.1 loaded");
-    assert(options(w).join("|") === "3.0=ONIX 3.0, Issue 74|3.1=ONIX 3.1, Issue 74",
+    assert(options(w).join("|") === "3.0=ONIX 3.0, Issue 75|3.1=ONIX 3.1, Issue 75",
       `both are still offered; got ${options(w).join("|")}`);
 
     pick(w, "3.0");
