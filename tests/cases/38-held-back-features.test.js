@@ -31,8 +31,7 @@ describe("Held-back features", () => {
     const w = render("onix-3.0-reference.xml");
     const select = w.document.getElementById("oxv-release");
     assert(!select.disabled && select.value === "3.0", `starts on the document's release; got ${select.value}`);
-    const releases = [...select.options].filter((o) => o.parentNode === select).map((o) => o.value);
-    assert(releases.join() === "3.0,3.1", `and offers both bundled releases; got ${releases.join()}`);
+    assert([...select.options].map((o) => o.value).join() === "3.0,3.1", "and offers both bundled releases");
   });
 
   test("turned on, the cog comes back", () => {

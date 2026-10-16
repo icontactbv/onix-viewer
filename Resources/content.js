@@ -528,7 +528,7 @@
     const shellHtml = OnixViewerShell.html({
       title: deriveTitle(document.location.href), cssURL, logoURL, logoURL2x,
       version: extensionVersion(), browser: extensionBrowser(), bytes: sourceBytes,
-      modelURLs: modelURLsByVersion(), migrationURL: browserAPI().runtime.getURL("onix-migrate.js"),
+      modelURLs: modelURLsByVersion(),
     });
 
     const parsed = new DOMParser().parseFromString(shellHtml, "text/html");
