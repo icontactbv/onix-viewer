@@ -51,7 +51,7 @@ function schemaDir(release) {
 function fetchBundles() {
   fs.mkdirSync(CACHE, { recursive: true });
   for (const release of RELEASES) {
-    const zip = path.join(CACHE, `onix-${release}.zip`);
+    const zip = path.join(CACHE, `onix-${release}-issue-${ISSUE}.zip`);
     if (!fs.existsSync(zip)) {
       console.log(`downloading ${bundleURL(release)}`);
       execFileSync("curl", ["-sSL", "--max-time", "120", "-o", zip, bundleURL(release)], { stdio: "inherit" });
