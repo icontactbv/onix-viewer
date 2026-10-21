@@ -7,8 +7,9 @@
 [![Permissions: none](https://img.shields.io/badge/permissions-none-brightgreen)](SECURITY.md)
 [![Licence: MIT](https://img.shields.io/github/license/rognlien/onix-viewer)](LICENSE)
 
-A browser extension that turns raw ONIX for Books XML into a readable tree,
-with EDItEUR code-list labels inline and validation as the file opens.
+A browser extension for Chrome, Firefox and Safari that turns raw ONIX for
+Books XML into a readable tree, with EDItEUR code-list labels inline and
+validation as the file opens.
 
 It acts only on ONIX served as XML. Everything else (RSS, generic XML, XHTML,
 SVG) is left to the browser.
@@ -38,9 +39,13 @@ SVG) is left to the browser.
   details.
 - **Firefox 140+:** [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/onix-viewer/).
   Local files need no setting.
+- **Safari 18+ (macOS 15+):** [Mac App Store](https://apps.apple.com/app/onix-viewer/id6816859194?mt=12).
+  Open the app once, turn the extension on in Safari's *Settings →
+  Extensions*, then choose *Always Allow on Every Website* from its toolbar
+  button.
 - **From source:** in `chrome://extensions`, turn on Developer mode, click
-  *Load unpacked* and pick `Resources/`.
-- **Safari:** in progress; see [safari/](safari/README.md).
+  *Load unpacked* and pick `Resources/`. Building the Safari app is described
+  in [safari/](safari/README.md).
 
 ## Keyboard
 
@@ -64,8 +69,8 @@ npm run build          # the store packages, into dist/
 ```
 
 The code lists, Thema and the content models are generated from EDItEUR's
-files in `tools/data/` and committed; CI fails if they drift. Design notes,
-the release steps and the reasoning behind both are in [CLAUDE.md](CLAUDE.md).
+files in `tools/data/` and committed; CI fails if they drift. Each test
+fixture's purpose is in [tests/fixtures/](tests/fixtures/README.md).
 
 ## Privacy
 
