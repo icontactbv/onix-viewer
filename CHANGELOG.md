@@ -20,15 +20,13 @@ the main branch.
   (List 139).
 
 ### Fixed
-- **About no longer offers "rules of your own".** Custom rules are not in
+- **About no longer offers "rules of your own"**, a feature that is not in
   the shipped build.
 - **No dialect switch on Acknowledgement messages.** Their own elements have
-  no short tags the viewer knows, so the conversion mixed the two dialects,
-  and Copy XML and Download handed that out as ONIX.
-- **Prefixed ONIX converts.** In a document written as `<onix:Product>`,
-  the dialect switch and its Copy XML and Download moved the namespace but
-  left every name in the source dialect. Names are now translated under
-  their prefix.
+  no short tags the viewer knows, so the conversion mixed the two dialects.
+- **Prefixed ONIX converts.** In a document written as `<onix:Product>`, the
+  dialect switch, Copy XML and Download left every name in the source
+  dialect.
 - **The converted document keeps the source's attributes in place.** The
   namespace declaration no longer moves behind `release`, and a foreign
   namespace declared on the root stays there.
@@ -39,1020 +37,318 @@ the main branch.
 - **Thema subject codes.** A `<SubjectCode>` under one of the seven Thema
   schemes, 93 to 99, shows its English heading from Thema 1.6
   (`FYT → Fiction in translation`), with a chip that opens the scheme's
-  codes, and a code Thema does not have is a warning. The Thema data is
-  sent only to documents that use it.
+  codes. A code Thema does not have is a warning.
 - **Form details are checked against the form.** A `<ProductFormDetail>`
   that EDItEUR ties to other forms is an error: `"B115" (Kartonnage
-  (Sweden)) can only be used with <ProductForm> BB, not BC`. The 98 codes
-  and their forms come from the sixteen assertions in EDItEUR's strict
-  schema, in `<DescriptiveDetail>` and `<ProductPart>`.
-- **Download.** A toolbar button beside Copy XML saves the document as it
-  is shown: the file itself at its own dialect, the converted ONIX while the
-  view is translated, named for the dialect (`feed-short-tags.xml`,
-  `feed-reference-names.xml`). It needs no permission.
+  (Sweden)) can only be used with <ProductForm> BB, not BC`.
+- **Download.** A toolbar button beside Copy XML saves the document as it is
+  shown: the file itself, or the converted ONIX while the view is translated
+  (`feed-short-tags.xml`, `feed-reference-names.xml`).
 
 ### Changed
-- **The toolbar's controls are icons with tooltips.** Expand and Collapse
-  are chevrons opening from a line and closing onto it, Wrap the familiar
-  wrap-text sign, and Copy XML
-  and Download keep their icons and drop their words; each names itself and
-  its key on hover. Copy shows a tick when it is done. The row is about
-  300px shorter, so the release selector now stays down to 800px.
-- **The file size reads as the Finder gives it.** `373.3 MB` where the
-  toolbar said `363360.2 KB`: bytes rather than characters, decimal units,
-  whole kilobytes, one decimal for megabytes and gigabytes, in the
-  browser's own number format. The product count beside it is grouped the
-  same way: `20,868 products` (`20 868` in Norwegian).
-- **The Mac app has an icon of its own.** The owl on a teal square, where
-  macOS used to put the extension's transparent owl on a gray plate. Safari
-  only; the extension itself is unchanged.
+- **The toolbar's controls are icons with tooltips**, each naming itself and
+  its key on hover. The row is about 300px shorter, so the release selector
+  now stays down to 800px.
+- **The file size reads as the Finder gives it**: `373.3 MB` where the
+  toolbar said `363360.2 KB`, in the browser's own number format. The
+  product count is grouped the same way (`20,868 products`).
+- **The Mac app has an icon of its own**: the owl on a teal square.
 
 ### Fixed
-- **Search no longer hangs on a large feed.** It used to render every
-  Product before searching; it now searches the document itself, renders
-  only the Product of the hit it shows, and runs in slices with the page
-  responsive. A 10,000-product feed takes about four seconds for any query.
-  It finds element names, attributes, values, comments and code-list labels,
-  Thema headings included.
+- **Search no longer hangs on a large feed.** It searches the document
+  itself rather than rendering every Product first; a 10,000-product feed
+  takes about four seconds for any query.
 - **A file over 500 MB no longer crashes the tab.** It gets a notice saying
-  it is too large to open, within seconds; a 618 MB feed used to take the
-  tab down after 19 minutes.
-- **A large file's page now finishes loading.** Above the size Chrome
-  caches (about 150 MB), the viewer's second request for the file left the
-  page loading for good, the tab busy in the background; the request now
-  waits for the page to load.
-
-### Held back
-Built and tested, and in the code behind a switch that is off in 0.9.21
-(`FEATURES.customRules` in `viewer.js`, `CUSTOM_RULES` in `content.js`): the
-custom-rules editor with its cog and its `storage` permission. Until it
-ships, the toolbar has no cog and the manifest asks for no permission at
-all.
-
-- **Your own validation rules, written as Schematron.** A cog in the
-  toolbar opens an editor; paste a rule set of `<pattern>`, `<rule
-  context>`, `<assert>` and `<report>` and it is checked on every ONIX
-  document alongside the schema, with findings in the same pills and list.
-  Tests are XPath 1.0, run on the browser's own engine with nothing
-  bundled. Rules are written in reference names, unprefixed, and serve
-  short-tag files too through a renamed mirror of the document; the
-  assertion's `id` becomes the finding code, its text the message,
-  `role="warning"` the severity. Problems with a rule set are listed in the
-  editor and reported as warnings rather than thrown. The rule set is kept
-  in the extension's storage, so it follows you from page to page.
-- **The custom-rules cog shows a dot** in its corner while a rule set is
-  installed, in place of the accent fill, which read as a button stuck down.
-- **The rules editor is larger, and resizes**: 860px wide with a taller
-  field to start, and a drag of the modal's corner gives a longer rule set
-  the window — the field fills whatever the modal is given.
-- **The extension now declares one permission, `storage`**, which holds the
-  custom rule set and nothing else; it was empty since 0.9.8. Chrome shows
-  no install warning for it. SECURITY.md describes the round trip.
+  it is too large to open.
+- **A large file's page now finishes loading.** Above about 150 MB, Chrome
+  left the page loading for good.
 
 ## 0.9.20 — 2026-09-29
 
 ### Added
-- **The code-list issue pill is now a release selector.** It still reads
-  `ONIX 3.1, Issue 74`, but its options judge the document against ONIX 3.0
-  or 3.1, whichever the reader picks; it starts on the release the file
-  declares. 3.0 and 3.1 disagree about what is an error
-  and what a warning — `<AudienceCode>` is deprecated in 3.0 and unknown to
-  3.1 — so a feed about to move between them can be read both ways, and a
-  standalone `<Product>` with no namespace, which declares nothing, can be
-  checked structurally at all. The other release's content model is fetched
-  the first time it is asked for, so a page still loads one model. Under an
-  override the `release` attribute is not judged, since it can only
-  disagree, and the verdict's note says which release was checked and which
-  the file declares. The choice is not remembered between documents.
-- **A new owl.** The icon is redrawn as vector artwork, `icons/icon-original.svg`,
-  with hand-drawn sizes for everything small, and `npm run icons` is the whole
-  of an icon change: it renders the nine shipped sizes, copies the 128 to the
-  web page, re-renders the promo tiles and runs the icon check.
-- **Dev builds.** `npm run build:dev` builds all three browsers' packages into
-  `dist/dev/` without bumping the version, the `-dev` version name kept so a
-  local install never passes for the store's. The Safari one is an
-  "ONIX Viewer Dev" app with a bundle identifier of its own, which sits beside
-  the App Store app and whose extension stays in Safari across quits.
-- **Safari screenshots.** `npm run screenshots:safari` takes the App Store set
-  from the Safari you use, since Safari cannot be driven headless: it opens a
-  tab on the served sample, sizes the window to a 1280×800 viewport, captures
-  the window and crops the page out of it.
-- **A listing file for addons.mozilla.org**, `AMO_LISTING.md`, beside the
-  Chrome and App Store ones: the product-page fields, the reviewer notes and
-  the source-archive rebuild steps.
-
-- **The content models are checked against libxml2.** `npm run test:oracle`
-  judges every ONIX document in the repository as 3.0 and as 3.1 with
-  `xmllint` against EDItEUR's own Issue 74 schemas and with the viewer's
-  validator, and the verdicts must agree. They do, on all 42.
-
-- **The store manifests are tested.** `tools/prune-manifest.js` is now the
-  one place the committed manifest is cut down per browser — the packager
-  runs it — and the suite runs it for all three targets against the real
-  manifest, holding the Chrome Web Store's and App Store Connect's
-  description limits, and checks that no shipped copy names a browser.
-
-- **A privacy policy page and the App Store listing copy.** `site/privacy.html`
-  is the URL the stores ask for; `SAFARI_LISTING.md` is the App Store Connect
-  record, paste-ready, with the review notes. The front page's privacy
-  paragraph now names the one permission rather than claiming none.
-
-- **A start on Safari.** `tools/package-extension.sh --target=safari`
-  prunes the manifest for Safari (its own `strict_min_version`, the Chrome
-  and Firefox keys dropped), keeps the folder for Safari's *Add Temporary
-  Extension…* and generates the Xcode project with Apple's converter into
-  `dist/safari/`. `SAFARI.md` has what was established, the question a
-  manual run has to answer, and the run itself. Nothing shipped changes.
-
-- **A script that publishes the web page.** `tools/publish-site.sh` syncs
-  `site/` into the site-repo repo, commits there naming the commit it
-  came from, and pushes; it refuses when the site's copy has edits of its
-  own, and `--dry-run` previews.
-
-- **A script that takes the store screenshots.** `tools/screenshots.js`
-  captures the tree, the code-list popup and the findings list at 1280×800
-  in the light scheme, in a headless Chrome (`npm run screenshots`, into
-  `Screenshots/Chrome/`) or Firefox (`npm run screenshots:firefox`, into
-  `Screenshots/Firefox/`).
-
-- **An MIT licence.** `LICENSE` at the repo root and `"license": "MIT"` in
-  `package.json`.
-
-- **A start on Firefox.** The manifest carries the Firefox add-on id,
-  minimum version and no-data-collection declaration beside the Chrome keys,
-  so `Resources/` loads as a temporary add-on in Firefox as it loads unpacked
-  in Chrome; `tools/package-extension.sh --target=firefox` builds the AMO zip
-  with the Chrome keys pruned, and the Chrome zip no longer carries the
-  Firefox ones. The README says how to build the source archive AMO asks
-  for and how to reproduce the upload from it. Not yet released for Firefox —
-  `FIREFOX.md` has what remains.
-
+- **A release selector.** The code-list issue pill now lets you judge the
+  document against ONIX 3.0 or 3.1, starting on the release the file
+  declares. A feed about to move between them can be read both ways, and a
+  standalone `<Product>` with no namespace can be checked structurally at
+  all.
 - **An About window.** Click the owl, or press `?`: the version, the
   code-list issue, the keyboard shortcuts, and links to the source, the
-  store listing and EDItEUR. The committed manifest names its version
-  `0.9.19-dev`, shown on the `chrome://extensions` card and in About alike,
-  and the packager strips the suffix for the store build, so a development
-  copy is never mistaken for the store's.
+  store listing and EDItEUR.
+- **Firefox support.**
+- **A new owl.** The icon is redrawn, with hand-drawn small sizes.
 
 ### Changed
-- **The toolbar mark is drawn at its own size.** It was the 48px icon in a
-  28px box, resampled on every display and soft on all of them; it is now a
-  hand-drawn 28 on a 1x display and a hand-drawn 56 on 2x, through a
-  `srcset`, so nothing is resampled.
-- **`npm run screenshots` is `npm run screenshots:chrome`**, beside the
-  Firefox and Safari scripts.
-- **A store build sweeps `dist/`** of other versions' artefacts first, since a
-  stale zip beside the current one is what gets uploaded by mistake; `npm run
-  clean` empties it.
-
-- **Large feeds render in a fraction of the time.** Each Product's subtree
-  is laid out only when it is near the viewport (`content-visibility:
-  auto`), so the browser skips the work for Products off screen: a 5 MB
-  feed is ready in 1.5 s instead of 5.6 s, a 17 MB one in 5 s instead of
-  41 s, and the first Collapse press on it takes 0.17 s instead of 2 s.
-  Search and findings jumps are now instant rather than smooth, since a
-  smooth scroll past Products still being laid out landed short of its
-  target.
-- **A browser test.** `npm run test:browser` loads the extension into a
-  headless Chrome, checks the takeover of a served XML page, and runs the
-  Schematron engine's XPath on Chrome's own. CI runs it as its own job.
+- **Large feeds render in a fraction of the time.** Products off screen are
+  not laid out: a 5 MB feed is ready in 1.5 s instead of 5.6 s, a 17 MB one
+  in 5 s instead of 41 s. Search and findings jumps are now instant rather
+  than smooth.
+- **The toolbar mark is drawn at its own size**, crisp on 1x and 2x
+  displays.
 
 ### Fixed
-- **A known element the parent never takes no longer derails the composite.**
-  `<SequenceNumber>` inside `<TextContent>` is ONIX 3.1's, so a 3.1 feed
-  judged as 3.0 reported eight findings per text for that one fault. It is
-  now one, `structure.not-allowed`, as libxml2 reports it. No document at
-  its own release changed a recorded finding.
-
+- **A known element the parent never takes no longer derails the
+  composite.** A 3.1 feed judged as 3.0 reported eight findings per
+  `<TextContent>` for a single `<SequenceNumber>`; it is now one.
 - **The About window no longer says "in Chrome"**, and its install link
-  follows the browser: the Chrome Web Store in Chrome, the web page in
-  Firefox and Safari until each has a listing. `content.js` stamps the
-  browser on the shell beside the version.
-
-- **A warnings-only verdict shows the warning glyph.** The toolbar pill
-  used the error icon and colour whenever there were findings at all;
-  "600 warnings" now carries the triangle, in amber.
-- **The toolbar's issue pill no longer covers the verdict on a narrow
-  window.** Below 1000px the two columns overlapped, so a click on
-  "6 errors, 5 warnings" opened nothing; the issue pill now gives way there,
-  since the issue is also in About and the verdict is nowhere else, and
-  below 900px the icon buttons keep only their icons.
-- **A share link behind a session is taken over.** The re-fetch of such a
-  URL can come back as a 200 with the app's sign-in page, which the
-  extension took at face value as "not ONIX" and left the browser's view in
-  place while the parser held the document. The re-fetch is now trusted
-  only when it returns XML that looks like the document the parser saw;
-  anything else falls back to the parser's own tree, as a failed request
-  always did.
+  follows the browser.
+- **A warnings-only verdict shows the warning glyph**, in amber, instead of
+  the error icon.
+- **The issue pill no longer covers the verdict on a narrow window.**
+- **A share link behind a session is taken over.** When the second request
+  for the file returned the app's sign-in page, the viewer gave up; it now
+  uses the browser's own copy of the document.
 
 ## 0.9.19 — 2026-09-12
 
 ### Added
-- **Second-order code lists are resolved and validated.** A few elements take
-  their code from a list that a sibling selects — `<ProductFormFeatureValue>`
-  is a colour from List 98 when `<ProductFormFeatureType>` is 01, an
-  accessibility detail from List 196 when it is 09 — and the schema types them
-  as plain strings, so their codes rendered bare and went unchecked. They now
-  get the label badge and the `List N` chip like any other code, the popup
-  names the selector (`ProductFormFeatureValue when ProductFormFeatureType is
-  09`, in the document's own dialect), and a code the selected list lacks is
-  reported with the reason that list applies. Ten value elements, 25 lists,
-  transcribed from the assertions of EDItEUR's strict schema. Suggested by
-  Graham Bell.
-- **A bad code still offers its list.** A row whose code is not in its list
-  gets the `List N` chip without the label, so the list it should have come
-  from is one click away. This holds for an element's own list too.
-- `Onix/onix-3.1-refnames-defects.xml`, a defects sample for the store
-  screenshots, and the two strict 3.1 schemas in `Onix/` for reference.
-- The findings for every fixture and sample are on record in `tests/expected/`,
-  and ESLint runs in CI. The suite is split into one file per area.
+- **Second-order code lists are resolved and validated.** A few elements
+  take their code from a list that a sibling selects —
+  `<ProductFormFeatureValue>` is a colour from List 98 when
+  `<ProductFormFeatureType>` is 01, an accessibility detail from List 196
+  when it is 09. They now get the label and the `List N` chip like any other
+  code, and a code the selected list lacks is reported. Suggested by Graham
+  Bell.
+- **A bad code still offers its list**, so the list it should have come from
+  is one click away.
 
 ### Changed
-- **A file opens fully expanded.** Products no longer start folded on a
-  multi-product feed; the tree shows its content, and two presses of Collapse
-  give one line per product for the reader who wants the overview.
-- **Finding pills are wider** — the message ellipsises past `min(110ch, 70vw)`
-  instead of `min(72ch, 55vw)`, enough for a second-order finding to show its
+- **A file opens fully expanded.** Two presses of Collapse give one line per
+  product.
+- **Finding pills are wider**, enough for a second-order finding to show its
   selector.
-- **The 128px icon is hand-drawn**, replacing the downscale of the master, so
-  the store listing and the extensions page get a crisp mark.
-- **The viewer's HTML shell is its own file.** `shell.js` holds the markup
-  and is listed in the manifest as a second content script, loaded ahead of
-  `content.js`; the test suite now renders from the same template rather than
-  a copy of it. Nothing changes for the reader.
-- **The second-order code-list table is generated**, from the assertions in
-  EDItEUR's strict schema, instead of transcribed by hand. Same table, and CI
-  now fails if it drifts from the schema.
-- **`site/`**, the extension's web page, is tracked; it is published by copying
-  it into the site-repo repo. Its screenshots and icon are held to the
-  committed originals by a test.
+- **The 128px icon is hand-drawn.**
 
 ## 0.9.18 — 2026-09-09
 
 ### Changed
-- **Finding markers are pills now.** The solid red and amber blocks with a
-  white glyph are gone. A finding shows as a pill tinted in its severity colour,
-  a step stronger than the row's own tint, led by a small solid glyph — a red
-  circle-cross or an amber triangle-bang — and carrying the message itself. A
-  row with several findings shows the first and `+n more`. The pill is a
-  button: clicking it opens the findings list scrolled to that row's entries,
-  with them highlighted and the first focused; Escape brings focus back to the
-  pill. The findings list's badges use the same glyphs, unboxed.
-- **Row tints are softer** — 9% amber and 7% red, from 16% and 12%.
-- **Standalone text rows are shown trimmed.** The blank lines and indentation
-  around a text node between elements are the file's layout, not content, and
-  kept verbatim they made the row three lines tall.
+- **Finding markers are pills.** A finding shows as a pill tinted in its
+  severity colour, led by a small glyph and carrying the message. A row with
+  several findings shows the first and `+n more`. Clicking the pill opens
+  the findings list at that row's entries.
+- **Row tints are softer.**
+- **Standalone text rows are shown trimmed**, rather than three lines tall
+  from the file's own indentation.
 
 ### Fixed
-- **The tree did not fill the window.** It is the only child of a flex row and
-  had no grow, so a narrow document left it, and its scrollbar, standing in
-  the middle of the window.
-- **Stray text was flagged on the wrong row.** The finding was pinned to the
-  containing element's opening row, which for text at the end of an
-  `<ONIXMessage>` is the top of the document. Each run of text is now reported
-  on its own, naming the text node, and the pill sits on the text's row. The
-  findings list still files it under the element.
-
-### Added
-- `Onix/onix-errors-and-warnings.xml`, a sample that trips every finding kind
-  the validator has, 104 numbered violations including nine that warn rather
-  than error.
+- **The tree did not fill the window** when the document was narrow.
+- **Stray text was flagged on the wrong row**, often the top of the
+  document. The pill now sits on the text's own row.
 
 ## 0.9.17 — 2026-09-09
 
 ### Added
 - **Attributes are validated.** ONIX's ten attributes — `datestamp`,
   `sourcename`, `sourcetype`, `language`, `textscript`, `textformat`,
-  `textcase`, `dateformat`, `collationkey`, `release` — were never checked, so
-  a `textformat="99"` passed while the same bad code in an element was
-  reported. The new `attribute` rule checks code-list membership, deprecated
-  codes, datatypes, enumerations, and the one required attribute. `refname`
-  and `shortname` are checked against the element they sit on, in whichever
-  dialect the document uses. `xmlns`, `xsi:*` and `xml:*` are left alone.
+  `textcase`, `dateformat`, `collationkey`, `release` — are checked for
+  code-list membership, deprecated codes, datatypes and empty values.
+- **All identity constraints are enforced** (142 in 3.1, 85 in 3.0): no two
+  `<Product>` with the same `<RecordReference>`, no two `<Measure>` with the
+  same type and unit, and so on.
+- **The toolbar opens with the extension's mark**, so a raw XML URL shows
+  which extension replaced the page.
+- **New owl artwork throughout.**
 
-  The models grew ~4 KB, not 25: only ten distinct attribute sets exist across
-  510 elements, so the generator pools them and each element stores an index.
-
-### Added
-- **All 142 identity constraints are enforced** (85 in 3.0) — the rules no
-  content model can state: no two `<Product>` with the same
-  `<RecordReference>`, no two `<Measure>` with the same type and unit, each
-  repeat of `<Text>` needing a distinct language and script. Compiled from the
-  schema's `xs:unique` onto each host element; the generator throws rather than
-  skip a shape it cannot compile. `xs:unique`'s own rule is kept: a node whose
-  key is incomplete falls outside the constraint.
-
-### Added
-- **New owl artwork throughout.** The seven manifest icon sizes, the toolbar
-  mark, and the promo tiles all come from `icons/icon-original.png` now.
-  `tools/render-icons.sh` prefers a hand-drawn `icons/icon-<size>.png` over a
-  downscale of the master where one exists — definition at 16 and 32 px is worth
-  more than consistency with a scale — but refuses one without an alpha channel,
-  since an opaque icon shows as a pale tile on a dark ground.
-- **The toolbar mark is the app icon itself**, not a copy — it loads
-  `Resources/icons/icon-48.png` rather than a `logo-48.png` that would need
-  keeping in step.
-- **The toolbar opens with the extension's mark.** A raw XML URL gives no other
-  clue which extension replaced the page. 28px, which is exactly the toolbar's
-  content height. It is removed rather than left broken if the page's `img-src`
-  CSP refuses extension URLs.
-
-### Added
-- **The store-review claims are now asserted, not just written down.** A
-  `Reviewability` block in the suite checks that no shipped script uses `eval`,
-  `new Function` or `document.write`; that exactly one `fetch()` exists and it
-  targets the page's own URL; that every `innerHTML` write is a literal empty
-  string; that the manifest declares no permissions, host permissions,
-  background worker or `externally_connectable`; that `SECURITY.md`'s fenced
-  manifest excerpt parses as JSON and matches the real manifest field for
-  field; and that every resource `content.js` injects is web-accessible and
-  present. A stale security note is worse than none, so these are held by
-  tests rather than by hand.
-- **A staleness check for the icons** (`npm run check:icons`, and a step in
-  `test.yml`). The shipped PNGs must be byte-identical to their hand-drawn
-  sources, sized to match their names, and carry an alpha channel. It compares
-  bytes rather than re-rendering, because `render-icons.sh` needs
-  `rsvg-convert`, whose output is not byte-stable between versions — a
-  re-render-and-diff check would fail on the renderer, not on a real problem.
-  It also reports which sizes are still downscales of the master.
+### Changed
+- **Soft wrap gains an icon.**
+- **Chrome 119 is the minimum version.**
 
 ### Removed
-- **The structure / split pane is gone.** A right pane rendering Products as
-  cards-and-blocks, with a resizable divider, a three-way XML / Split /
-  Structure toggle and bidirectional collapse-sync to the tree — bundled,
-  tested, and gated off in the UI in two places at once. It shipped ~29 KB of
-  `onix-blocks.js`, 47 CSS rules and a divider drag handler to every install
-  for something no reader could reach. Out with it went
-  `window.OnixViewerBlocks`, `setupViewMode`/`applyViewMode`/
-  `renderBlocksPane`/`setupBlockSync`/`setupDivider`, the row↔card `pairMap`
-  and its highlight pair, `#oxv-blocks-pane`/`#oxv-blocks`/`#oxv-divider`, the
-  `body.oxv-view-*` classes, the `oxv-view-mode` localStorage key and 339 lines
-  of tests. `viewer.js` is 13.3 KB smaller, `viewer.css` 6.8 KB, and the
-  packaged extension drops about 49 KB.
-
-  The tree kept everything of its own: the `Block N` badge
-  (`.px-block-label`), the toolbar's `Blocks: …` segment (`#oxv-block-list` —
-  a different thing from `#oxv-blocks`), and `setActiveTreeRow`, which the
-  findings list uses to jump to a row.
-- **Superseded icon artwork.** The book-and-gem source (`icons/image.png` and
-  its original) and two hand-drawn sizes that nothing reads — only manifest
-  sizes are consulted, so `icon-24.png` and `icon-64.png` were never opened.
-- **Dead blocks-pane leftovers**: `findIdentifiers()` in the pane renderer had
-  no caller, and `.px-block-list` / `.px-block-subhead` were styled but never
-  produced by anything.
-- **`OnixViewerOnix.tagClass()`** — exported but called by nothing;
-  `viewer.js` derives the dialect class itself in `displayedTagClass()`.
-- **A dead `--shadow-card` custom property**, declared in both themes and used
-  by no rule.
+- **The hidden structure pane**, which no reader could reach. The packaged
+  extension is about 49 KB smaller.
 
 ### Fixed
-- **Text inside an element-only composite went unreported.** No ONIX composite
-  is `mixed="true"` — that is what the XHTML `flow` elements are — so character
-  data inside one is a schema violation. The matcher worked from
-  `childElements` alone and so never saw it: a stray fragment sitting between
-  two composites, of the kind a mis-serialised feed produces, passed in
-  silence. Now `structure.stray-text`, CDATA included. Indentation stays
-  invisible, and flow elements are still never inspected.
-- **A wrong-length identifier went unchecked.** Under `ProductIDType` 15 both
-  `978-82-345-6789-6` (hyphenated, which real feeds do send) and `97882345`
-  (truncated) passed in silence. A comment claimed the length was "left to the
-  datatype rule" — it cannot be: `<IDValue>` is typed `dt.NonEmptyString`,
-  pattern `.*\S.*`, so the schema constrains neither length nor alphabet and
-  there is no facet to catch it with. The `gtin` rule now owns the length for
-  the three schemes it knows, reporting `gtin.length` before any check digit,
-  since a digit cannot be computed for a value of the wrong shape. A lower-case
-  `x` in an ISBN-10's check position stays accepted on purpose.
-- **An empty attribute value went unchecked.** `language=""`, `datestamp=""`
-  and `collationkey=""` were all accepted: the attribute rule bailed out on a
-  falsy value before reaching any check. No ONIX attribute has a legal empty
-  value — each is code-list bound (no enumeration includes the empty string),
-  an enumeration of its own, or a datatype whose pattern demands a character
-  (`dt.NonEmptyString` is literally `.*\S.*`) — so this is now reported as
-  `attribute.empty`. Whitespace-only counts as empty, because every enumerated
-  type in ONIX restricts `xs:token`, which collapses whitespace before
-  validating; the same rule is why `language=" eng "` stays valid.
-- **`SECURITY.md` under-reported the manifest.** Its excerpt claimed to be the
-  full surface but omitted `icons/icon-48.png` from `web_accessible_resources`
-  (added when the toolbar gained the app icon) as well as `all_frames`, and it
-  described the clipboard path without its `execCommand` fallback. All three
-  corrected, and `web_accessible_resources` — which reviewers do ask about —
-  now has a justification of its own in both `SECURITY.md` and
-  `CWS_LISTING.md`.
-- **The shipped 32px icon was stale.** `icons/icon-32.png` gained an alpha
-  channel, which makes a hand-drawn size win over a downscale of the master —
-  but `render-icons.sh` had not been re-run since, so `Resources/icons/icon-32.png`
-  was still the downscale. Re-rendered. Note that the icons have no drift check
-  in CI the way the generated JS does.
-
-### Changed
-- **Soft wrap gains an icon**, so every labelled toolbar button now has one.
-  It is the return arrow: two earlier attempts drew the literal wrap — a text
-  rule plus a line curving round with an arrowhead — and at 14px both read as a
-  bar with a nub, because an arc and an arrowhead do not fit in 10 pixels. The
-  dialect switch stays text-only on purpose; its label names the translation and
-  changes with the document.
-
-### Fixed
-- **Copy XML lost its icon after the first click.** The "Copied" flash wrote
-  the button's `textContent`, which took the prepended SVG with it and never
-  put it back. Only the label's text node is swapped now.
-- **Elements named after `Object.prototype` members were misjudged.** The
-  generated content model's `elements`, `deprecated` and `attributes` tables
-  were plain object literals, so an extension element called `<constructor>`
-  or `<toString>` inherited a function as its shape and was reported as
-  deprecated and as needing a value instead of as unknown. The generator now
-  emits null-prototype tables; both models regenerated.
-- **DOCTYPE rows dropped the `SYSTEM` keyword.** Every ONIX 2.1 file references
-  its DTD that way, and the row rendered `<!DOCTYPE ONIXMessage "…dtd">`.
-- **The takeover could fail silently on a fast re-fetch.** At `document_start`
-  the parser may not have created the root element yet, and a cached re-fetch
-  can resolve before it does; the root swap then threw into a catch that is
-  silent in release. The content script now waits for the root.
-- **Tree shortcuts acted behind an open dialog.** `/`, `e`, `c` and the rest
-  are ignored while the code-list popup or the findings list is up.
-- **A namespace-prefixed ONIX attribute went unchecked.** ONIX declares all ten
-  of its attributes *unqualified* — none is global and neither schema sets
-  `attributeFormDefault` — so `onix:language="eng"` is not a valid ONIX
-  attribute at all. The rule skipped every namespaced attribute in one test, so
-  `onix:language="zzz"` was neither judged nor reported, bad code and all. It
-  is now `attribute.qualified`. Attributes in any *other* namespace stay
-  tolerated: strictly the schema rejects those too, but that is where real
-  feeds put their own annotations, and flagging it would report their
-  conventions as errors.
-- **Four datatypes were entirely unchecked.** `dt.Decimal`, `dt.Integer`,
-  `dt.PositiveInteger` and `dt.PositiveIntegerOrZero` carry no facets at all,
-  only a base type, and the generator recorded facets only — so
-  `<EditionNumber>abc</EditionNumber>` passed, as did `2.5` and `0`. The base
-  type's lexical space is now checked, `xs:int`'s 32-bit range included.
-- **Space-separated code lists had their members skipped.**
-  `<CountriesIncluded>NO XX DK</CountriesIncluded>` passed unchallenged; `XX` is
-  now named. The generator records what the list is *of*, and `minLength`.
-- **`dt.DateOrDateTime` was never checked.** The generator saw `xs:union` and
-  treated it as opaque, so every `datestamp` and every date element went
-  unvalidated. The union has one member type carrying the five date patterns,
-  and a union of one is just that member. No fixture or `Onix/` sample gained
-  a finding, so this was a missed check rather than a wrong answer.
-- **35 code lists had no name to print in a finding.** Titles were only
-  reachable through an element that binds the list, and those 35 are bound to
-  attributes instead — so a finding read "List 14 (List 14)". The code-list
-  generator now emits titles by number as well.
-- **`<EpubLicense>` was missing from the ONIX 3.1 model entirely**, so valid
-  3.1 reported it as an unknown element and nothing inside it was checked at
-  all. It is the one element in either release declared by a *named*
-  `complexType` rather than an inline one — five declarations, two types — and
-  the generator compiled only inline types. Named types are now compiled,
-  `xs:extension` resolved by concatenating the base's particles ahead of the
-  extension's own. Its content model is genuinely context-dependent, so the
-  variants are keyed by parent: `<EpubLicenseDate>` is legal under
-  `<DescriptiveDetail>`, `<ContentItem>`, `<ResourceVersion>` and
-  `<TextContent>`, and not under `<Price>`. Every rule now reads an element's
-  shape through `api.shapeOf(node)`, which is where the parent is consulted.
-- **ONIX 3.0's `sourcetype`, `textcase` and `textformat` went unchecked.** 3.0
-  names those attribute types after the code list — `SourceTypeCode` where 3.1
-  says `List3` — and the definitions live in the CodeLists XSD we don't commit,
-  so all three compiled to an unknown datatype, which the datatype rule skips
-  in silence. A `textformat="99"` in a 3.0 document passed: exactly the bug
-  0.9.17 fixed for 3.1. They now resolve to Lists 3, 14 and 34.
-- **An empty `<CopyrightType/>` was reported as missing a value.** The
-  declaration carries `default="C"`, and an XSD default applies precisely when
-  the element is left empty, so the element is valid and means `C`. Defaults
-  are recorded in the model; three declarations across the two releases have
-  one.
-
-### Changed
-- **The content-model generator now refuses a schema it does not fully
-  understand**, rather than emit a model that is quietly short. Both releases
-  use exactly 27 XSD element kinds and all 27 are compiled, so a construct
-  absent today — `xs:any`, `xs:all`, `xs:key`, `nillable`, a facet like
-  `maxExclusive` — fails the build instead of being ignored. It also asserts
-  that every datatype named by an element or attribute is one it compiled,
-  which is the check that would have caught the 3.0 attribute gap above, and
-  that no facet on a `dt.*` type goes unread. A finite `maxOccurs` is enforced
-  too: `<OrderQuantityMinimum maxOccurs="2">` is the one particle in either
-  release with an upper bound above one.
-- **The manifest declares Chrome 119 as the minimum version**, the first
-  release with `match_origin_as_fallback`, so the store does not serve the
-  extension to a browser that would ignore that key.
-- **Dead code removed**: the attribute toggle that had no button, the unused
-  block-name set and its export, and a product-row scan that duplicated
-  `isProductRow`. The one `innerHTML` write, which cleared an already empty
-  tree, is gone too, and the reviewability test now asserts there are no
-  `innerHTML` assignments at all. Stale comments that contradicted the code
-  were brought in line.
+- **Text inside an element-only composite is reported**
+  (`structure.stray-text`).
+- **Wrong-length ISBNs and GTINs are reported**, such as a hyphenated or
+  truncated ISBN-13.
+- **Copy XML lost its icon after the first click.**
+- **DOCTYPE rows dropped the `SYSTEM` keyword.**
+- **The takeover could fail silently** when the page loaded very fast.
+- **Tree shortcuts acted behind an open dialog.**
+- **Several values went unchecked**: namespace-prefixed ONIX attributes,
+  numbers (`<EditionNumber>abc</EditionNumber>` passed), every member of a
+  space-separated list such as `<CountriesIncluded>`, and every date.
+- **`<EpubLicense>` was unknown in ONIX 3.1**, so valid 3.1 reported it as
+  an error and nothing inside it was checked.
+- **ONIX 3.0's `sourcetype`, `textcase` and `textformat` went unchecked.**
+- **An empty `<CopyrightType/>` was reported as missing a value**, though
+  the schema gives it a default.
+- **Some findings named a list as "List 14 (List 14)"** instead of by its
+  title.
+- **Elements named after JavaScript built-ins**, such as `<constructor>`,
+  were misjudged.
 
 ## 0.9.16 — 2026-09-08
 
 ### Added
-- **Deprecated elements are now reported**, as warnings, naming the release it
-  happened at and the replacement EDItEUR advises: `<TitleText> is deprecated
-  from release 3.1 — use either <TitlePrefix> or <NoPrefix/>, plus
-  <TitleWithoutPrefix> instead`. 7 elements in 3.1, 18 in 3.0, compiled from
-  the schema's own annotations rather than a hand-kept list. Only deprecated
-  *codes* were reported before.
-
-  Three annotations that say "Deprecated" describe an element's **children**,
-  not itself — `<Header>`, `<TitleElement>` and `<SalesRestriction>` — and the
-  first two appear in nearly every ONIX file, so they are deliberately not
-  flagged. `<TextSourceDescription>` is deprecated only within
-  `<TextContent>`, so the parent decides.
-- **ISBN-13, GTIN-13 and ISBN-10 check digits are validated.** The schema
-  can't see these — all three are just strings to it — and a wrong one is a
-  common real defect. Schemes without a check digit (proprietary, DOI, …) and
-  values of the wrong length are left alone.
-- **Tests run on every push and pull request** (`.github/workflows/test.yml`),
-  not only on a release tag. The same job re-runs all three generators and
-  fails on a diff, so editing an input in `tools/data/` without regenerating
-  is caught instead of shipping stale data.
-- **The test runner takes a name filter** — `npm test -- x512` runs one test,
-  `npm test -- validation` a whole block, matched case-insensitively against
-  the test name and its `describe` label. A filter that matches nothing exits
-  non-zero. Replaces commenting out every other test, and cuts a single-test
-  run from ~7s to ~0.2s.
-- First tests for `content.js` — the ONIX sniff that decides whether a page is
-  taken over at all, and the release sniff that picks the content model. Both
-  are lifted out of the source, since the file is an IIFE that acts on load.
+- **Deprecated elements are reported**, as warnings, naming the release and
+  the replacement EDItEUR advises: `<TitleText> is deprecated from release
+  3.1 — use either <TitlePrefix> or <NoPrefix/>, plus <TitleWithoutPrefix>
+  instead`.
+- **ISBN-13, GTIN-13 and ISBN-10 check digits are validated.**
 
 ### Changed
-- **Expand and Collapse now work a level at a time**, replacing the three
-  all-or-nothing buttons. **Expand** reveals one more level per press.
-  **Collapse** follows the shape of a message: first the `<Header>` and
-  everything inside each `<Product>`, then the `<Product>` rows, then the
-  root — and on non-ONIX XML it zips up from the leaves, the mirror of Expand.
-  Neither counts clicks: each press reads the tree, so they stay correct after
-  rows are folded by hand. `e` and `c` are unchanged, `b` is now a synonym
-  for `c`.
-- **Toolbar wording and icons:** "Expand all" → **Expand** and
-  "Collapse all"/"Collapse blocks" → **Collapse**, each with a stacked
-  double-chevron (down opens, up folds); "Wrap" → **Soft wrap**; **Copy XML**
-  gains a copy icon. The icons come from the same table as the severity chips
-  and the spinner.
-- **Fixed the toolbar's vertical alignment.** Adding icons to some buttons but
-  not others split the control row across three midlines 4.3px apart: an
-  `inline-flex` button takes its baseline from its first flex item, so an icon
-  button aligned on the icon's bottom edge and a text-only one on its text.
-  The row is a flex container now, so every control shares one midline.
-- **The toolbar degrades properly on a narrow window.** The document pill's
-  label ellipsises, then the search field shortens, then the pill is dropped —
-  the validation state and the code-list issue never give way. Measured from
-  1912px down to 700px with every block listed and a 4.8 MB feed: no overflow
-  at any width. (A bare `1fr` grid track will not shrink below its content, so
-  the middle column used to push into the right one.)
-- **The toolbar's right-hand side is reorganised.** The document pill moves in
-  beside the controls and becomes one unit — `📄 ONIX 3.1 (1 product) ·
-  Blocks: 1, 2, 4, 5, 6 · 17.9 KB` — absorbing what used to be a separate
-  `Blocks:` pill, since that describes the document rather than the viewer.
-  The validation state follows it. The code-list issue pill (`ONIX 3.1, Issue
-  74`) is reference material and now sits alone at the far right.
-- **Collapse blocks now folds the message `<Header>` too.** It is a sibling of
-  the products rather than a child, so the Product-child rule never reached it
-  — leaving it the one composite still sprawling after a collapse. The
-  `<Product>` rows themselves still stay open, and the button is still inert on
-  non-ONIX XML.
-- **The hidden Structure pane is no longer built on load.** Its cards were
-  rendered on every ONIX page even though the pane is disabled in the UI,
-  purely because the toolbar's product count read the return value — 43k DOM
-  nodes built and discarded on a 300-product feed, 144k on a 1000-product one.
-  The pane now renders on first reveal, and the count comes from the parsed
-  document. A 300-product feed goes from 2.0s to 1.1s to interactive.
-- **Only the content model for the document's own release is injected.** A
-  message declares exactly one release, so shipping both cost 103 KB of parse
-  to use half of it; `content.js` reads the release from the same head it
-  already sniffs. Where the release isn't readable there — ONIX 2.1, or a
-  standalone `<Product>` with no namespace — both still go in, so the "no
-  content model bundled" warning keeps naming everything that ships.
+- **Expand and Collapse work a level at a time**, replacing the three
+  all-or-nothing buttons. Collapse follows the shape of a message: first
+  everything inside each `<Product>` and the `<Header>`, then the
+  `<Product>` rows. `b` is now a synonym for `c`.
+- **The toolbar is reorganised.** The document pill gathers the release,
+  product count, blocks and size; the controls share one midline; and on a
+  narrow window the pill and search give way before the verdict.
+- **Pages load faster**: a 300-product feed goes from 2.0 s to 1.1 s to
+  interactive.
 
 ### Fixed
-- `tests/fixtures/onix-3.1-standalone-product.xml` was missing a required
-  `<ProductComposition>`, so the one fixture with a `<Product>` root reported a
-  schema error. It is now a clean baseline for that shape.
-- **Findings on a short-tag document now name short tags.** The content model
-  is in reference names, so a message could tell the reader their `<TitleText>`
-  is deprecated when their file says `<b203>` — and mix the two inside one
-  message: `<descriptivedetail> is missing a required <ProductComposition>`.
-  Every element name in a finding is now written in the document's own
-  dialect, including the ones inside EDItEUR's deprecation advice, which
-  becomes "use either `<b030>` or `<x501/>`, plus `<b031>` instead". Reference
-  documents are unchanged.
-- **The findings list is selectable text.** Its entries are buttons, which
-  browsers make unselectable, so the message — the one thing worth copying out
-  — could not be. Selecting it no longer triggers the jump to that row either.
-- **The renderer no longer depends on the JS stack.** It walks with an
-  explicit stack, like the validator. Nesting past ~2,000 levels used to
-  overflow, and the throw escaped mid-render, so everything after it — the
-  toolbar's document pill, validation, search, the click handlers — never ran,
-  leaving a tree truncated at 1,681 of 4,002 rows that looked like a complete
-  document. Rendered output is byte-identical for every fixture and both
-  `Onix/` samples.
-- **Closing the search field hands focus to its toggle** instead of dropping
-  it on `<body>`. The field is untabbable while collapsed, so a bare blur sent
-  the next Tab back to the top of the document. Focus is left alone when the
-  reader had already moved it elsewhere.
-- **Search no longer rescans the tree to clear its highlights.** It clears from
-  the match list it already holds; the old document-wide query cost 74 ms per
-  keystroke on a 17,500-row feed, more than the search itself.
-- **The findings list returns focus where it found it** when closed, names its
-  dialog for assistive tech, and keeps Tab inside itself — which is what its
-  `aria-modal="true"` already claimed. The code-list popup, which had the
-  first two, gained the Tab trap.
-- Twelve test fixtures carried invalid ISBN check digits, found by the new
-  rule on its first run; they now carry valid ones. `onix-3.1-invalid.xml`
-  keeps its bad digit deliberately — it is the defect catalogue.
-- **`<x512>` (`CopyrightType`) was missing from the short-tag map**, so in a
-  short-tag document it resolved no code-list label, the dialect switch could
-  not rename it, and the validator reported conformant ONIX as an unknown
-  element. The cause was in the generator: `tools/generate-codelists.js`
-  scraped the schemas with regexes that required `name="x"` to be a
-  declaration's last attribute, and `<xs:element name="x512" default="C">` is
-  the one declaration in either short schema that carries another. Both
-  schemas are now parsed as XML with the same `DOMParser`
-  `generate-content-model.js` already used, which makes the whole class of
-  miss impossible; the map goes from 529 to 530 pairs and is otherwise
-  byte-identical. The generator now also throws if a declaration yields no
-  `refname`, rather than emitting a map that is quietly short a few pairs.
+- **Findings on a short-tag document name short tags**, including inside
+  EDItEUR's deprecation advice.
+- **The findings list is selectable text.**
+- **A deeply nested document no longer renders truncated.** Past about
+  2,000 levels the tree stopped part-way and looked complete.
+- **Closing search returns focus to its button.**
+- **Search highlights clear faster** on large feeds.
+- **The findings list and code-list popup keep keyboard focus inside
+  themselves** and return it where it was when closed.
+- **`<x512>` (`CopyrightType`) was unknown in short-tag documents.**
 
 ## 0.9.15 — 2026-09-07
 
-### Changed
-- Toolbar tidying: the code-list pill drops the vendor name (`ONIX 3.1,
-  Issue 74`), the document pill is led by a file icon, and it names the
-  dialect only when the file uses **short tags** — reference names are the
-  norm, so saying so added nothing.
-- **Search is collapsed to a magnifier button**, opened by the button or `/`
-  and closed by `Esc`. It kept its place in the toolbar rather than being
-  removed: the browser's own find cannot see folded rows, and `<Product>`
-  blocks are auto-collapsed on any multi-product feed, so on exactly the files
-  where searching matters `Ctrl+F` finds nothing. This search walks every text
-  node and unfolds the ancestors of each match.
-- The **Validate** button is gone — validation is automatic now, and the
-  document never changes, so re-running it could only give the same answer.
-- **Upgraded to ONIX 3.1.3** — EDItEUR's release 3.1 revision 3, revised
-  2026-03-10 (was revision 2). EDItEUR asks all ONIX 3.1 users to move to the
-  new schema files whether or not they adopt the new features. The bundled
-  reference and short-tag schemas were replaced and both generators re-run,
-  which brings in four new elements and six revised content models:
-
-  - `<TextSource>` inside `<TextContent>` — a structured source for reviews
-    and endorsements, patterned after `<Contributor>`, superseding
-    `<TextAuthor>`, `<TextSourceCorporate>` and `<TextSourceDescription>`
-    (which are deprecated but still accepted).
-  - `<SequenceNumber>` and `<SubjectDescription>` inside `<NameAsSubject>`.
-  - `<PublisherNameInverted>` and `<ImprintNameInverted>`, mirroring
-    `<CorporateNameInverted>` — for names like *Éditions Albin Michel* that
-    sort better inverted. These also appear in `<SalesRights>`.
-  - Repeatable `<Affiliation>` and a wider `textscript` attribute, for
-    transliterated metadata (Hindi in Devanagari alongside a romanisation).
-    `textscript` values already resolved to List 121 labels.
-
-  Nothing changed for existing files: the namespace is still `…/onix/3.1/…`
-  and the schema still restricts `release` to `"3.1"`, so detection, the
-  content-model registry key and every existing document's findings are
-  untouched — verified against both dialects of the reference sample.
-
 ### Added
-- **Validate the document.** Every ONIX file is now checked as it opens,
-  without blocking the page. Each finding is marked on the row it concerns —
-  red with a cross for a schema error, amber with an exclamation for a
-  warning, message in the tooltip: elements that are missing, misplaced or
-  unknown; codes that aren't in their EDItEUR list; codes EDItEUR has
-  deprecated (the code lists carry a deprecation issue for 167 of the 4,791
-  codes, which the viewer now reads); and values that break their declared
-  datatype.
+- **Validation.** Every ONIX file is checked as it opens, without blocking
+  the page: elements that are missing, misplaced or unknown; codes that are
+  not in their EDItEUR list or are deprecated; and values that break their
+  datatype. Each finding is marked on its row. The toolbar shows **Valid**
+  or `4 errors, 1 warning`; clicking it, or pressing `v`, opens the full
+  list. ONIX 3.0 and 3.1 are each checked against their own schema; ONIX 2.1
+  and Acknowledgement messages have their code lists checked only.
+- **Read either dialect.** A toolbar switch (`t`) shows the document in
+  reference names or short tags, whichever it is not written in. The
+  translation is exact, from EDItEUR's own schemas.
+- **Copying follows the display**: while translated, Copy XML hands over the
+  converted document, with the namespace to match.
 
-  The toolbar shows a spinner and **Validating…** while it works, a green tick
-  and **Valid** when the document is clean, or `4 errors, 1 warning` — two
-  counts rather than one total, since they are acted on differently. Clicking
-  that (or pressing `v`) opens the full list, and clicking an entry there
-  jumps to the row it concerns.
-
-  The work is done in slices so nothing freezes: a normal document finishes
-  before the page settles, and an 11 MB feed keeps scrolling and folding
-  responsive while it is checked. The pass never scrolls the view on its own.
-
-  There's no XML Schema processor involved — the browser has none, and
-  libxml2-via-WASM would add roughly 4 MB and needs a CSP privilege the viewer
-  can't rely on. Instead each ONIX structure schema is compiled at build time
-  into a ~52 KB content model that a small interpreter walks in one pass:
-  about 100 ms for a 4.8 MB feed with 135,000 elements, measured in Chrome.
-
-  **Both ONIX releases since 3.0 are checked in full** — 3.0 (revision 8) and
-  3.1 (revision 3), each against its own compiled schema, chosen by the
-  message's `release`. There is nothing finer to cover: a message can only
-  declare `3.0` or `3.1`, and the revisions within a release aren't declarable
-  at all, so the newest revision of each is both the only option and a safe
-  one — ONIX adds and deprecates but doesn't remove, so the newest schema is a
-  superset of every earlier revision.
-
-  Anything older (ONIX 2.1) has its code lists checked and is told plainly
-  that the structure wasn't, rather than being judged against the wrong
-  schema. **Acknowledgement messages** are exempt for the same reason: their
-  elements live in a separate schema, so they'd otherwise report every element
-  as unknown.
-
-  The short-tag map now merges both releases' schemas (529 pairs), because 3.0
-  keeps about twenty tags 3.1 dropped — `Conference`, `Reissue`, `Gender`,
-  `EpubLicense` among them — without which a short-tag 3.0 file resolves
-  almost nothing. Validation is dialect-blind either way: the two dialects of
-  one record produce identical findings.
-
-  Messages live in a template catalogue that can be reworded or translated
-  without touching validation logic, and rules live in a registry the runner
-  walks once — so ONIX's 125 `xs:unique` identity constraints and GTIN-13
-  check digits can be added later without another traversal.
-- **Read either dialect.** ONIX comes in two: reference names
-  (`<LanguageRole>`) and short tags (`<b253>`). A toolbar switch (shortcut
-  `t`) shows the document as the other one, in either direction. It's
-  labelled after the translation and never relabels — **View as reference
-  names** can only appear over a short-tag file — so the dialect you actually
-  opened stays obvious, and the toolbar now names it outright
-  (`ONIX 3.1 short tags (1 product)`).
-
-  The translation is exact and lossless, because the map behind it is
-  generated from EDItEUR's own schemas and is one-to-one; verified against a
-  real record supplied in both dialects, where translating the short-tag file
-  reproduces every one of the 160 element names in the reference file.
-
-  Names are rewritten in place rather than re-rendered, so fold state and
-  search results survive; the tree is built in the preferred dialect from the
-  start, so a remembered preference costs nothing at load. Elements with no
-  translation — including the XHTML inside `textformat="05"` content — keep
-  their names, and code-list labels, summaries and block numbers are
-  unaffected because they are read from the parsed document. The choice is
-  remembered between documents.
-- **Copying follows the display.** While translated, **Copy XML** hands over
-  the converted document and **Copy node XML** the converted subtree — with
-  the EDItEUR namespace switched to match, since element names alone would
-  leave `<ProductIdentifier>` in a `/short` namespace and that isn't valid
-  ONIX. Indentation, comments, CDATA and the XML declaration are preserved.
-  At the document's own dialect the copy is the source byte for byte, exactly
-  as before.
+### Changed
+- **Upgraded to ONIX 3.1.3** (was 3.1.2), with its four new elements and six
+  revised content models.
+- **Search is collapsed to a magnifier button**, opened by the button or `/`
+  and closed by `Esc`.
+- The **Validate** button is gone; validation is automatic.
+- The code-list pill drops the vendor name, and the document pill names the
+  dialect only for short tags.
 
 ### Fixed
-- **Short-tag documents now resolve every code-list label.** The short-tag →
-  reference-name map was a hand-kept subset of about thirty tags, so only 12
-  of the 157 code-list-bound elements got a `→ label` badge in a short-tag
-  feed — `<b253>` (LanguageRole), `<b333>` (ProductFormDetail), `<b089>`
-  (SalesRightsType) and 142 others rendered as bare codes, which is exactly
-  where a label helps most, since the tags themselves are opaque. The map is
-  now generated from EDItEUR's official short-tag schema (505 pairs), so all
-  157 resolve. Five entries in the old map (`b003`, `b005`, `b056`, `b332`,
-  `b390`) turned out to be ONIX 2.1-era codes absent from 3.1, and their 3.1
-  replacements were missing entirely; both sets are now present.
-- **`<ONIXmessage>` is the short-tag message root**, not an ONIX 2.1 quirk —
-  the short schema declares that spelling (lower-case "message") for 3.0 and
-  3.1 alike, and it's the one short tag that isn't all lower case. The
-  detector already handled it via the namespace, but the code comments and
-  the short-tag test fixtures had it as `<ONIXMessage>`, which no short-tag
-  schema accepts. Fixtures corrected, and a namespace-less `<ONIXmessage>`
-  now takes its version from the `release` attribute instead of assuming 2.1
-  regardless.
-- The `<price>` summary chip did not appear in short-tag documents: the
-  summary table is keyed on reference names, and `price` was one of the tags
-  missing from the hand-kept map. The generated map fixes it, and summary
-  dispatch no longer depends on that map at all — it matches the lower-cased
-  name, which a short-tag composite already is.
+- **Short-tag documents resolve every code-list label.** Before, only 12 of
+  the 157 code-list elements got one.
+- **`<ONIXmessage>` with no namespace** takes its release from the `release`
+  attribute instead of assuming 2.1.
+- **The `<Price>` chip appears in short-tag documents.**
 
 ## 0.9.14 — 2026-09-07
 
 ### Added
-- **Summaries on collapsed composites.** The one-line chip that collapsed
-  `<Product>` rows have always had now appears on other composites too, so a
-  folded record still tells you what it holds. Identifier composites —
-  `ProductIdentifier`, `RecordSourceIdentifier`, `NameIdentifier`,
-  `SupplierIdentifier`, … — read as their resolved type plus value, e.g.
-  `GTIN-13 9788284517247`; a proprietary scheme uses its own `<IDTypeName>`
-  in place of the list's "Proprietary …" label. `<TitleDetail>` and
-  `<TitleElement>` show the quoted title, `<Contributor>` its role and name
-  (`By (author) Ola Nordmann`), `<Price>` its amount and currency
-  (`399.00 NOK`). Chips are capped at 60 characters so they can't wrap. The
-  seven ONIX blocks deliberately get none — their contents are too varied to
-  sample in one line, and the `<Product>` row above already carries the
-  identifier, form and title; they keep the `Block N` badge instead. Works in
-  both reference and short-tag dialect.
+- **Summaries on collapsed composites.** Identifiers read as their type and
+  value (`GTIN-13 9788284517247`), `<TitleDetail>` as the title,
+  `<Contributor>` as role and name, `<Price>` as amount and currency. Works
+  in both dialects.
 
 ### Changed
-- **Collapse blocks now folds every composite inside a `<Product>`**, not
-  only the seven ONIX blocks — so `ProductIdentifier`,
-  `RecordSourceIdentifier` and `Barcode` fold to one line each and a record
-  reads as one row per child rather than a mix of folded blocks and sprawling
-  identifiers.
+- **Collapse blocks folds every composite inside a `<Product>`**, not only
+  the seven blocks.
 - Codelists upgraded to **EDItEUR Issue 74** (was 73). 22 new codes,
-  including two AI-disclosure links (List 196), three EUDR raw-material
-  location codes plus "Map projection" (List 163), Bookshop.org, Hoopla and
-  XigXag (List 253), `SH` "Multiple-component retail product, partly digital"
-  (List 2) and `B427` "Belly band" (List 79). List 203 is relabelled
-  throughout from "Content warning" to "Content advice" and gains codes for
-  death and grief, and for suicide.
+  including two AI-disclosure links (List 196), Bookshop.org, Hoopla and
+  XigXag (List 253), and "Content warning" relabelled "Content advice"
+  (List 203).
 
 ### Fixed
-- **Two enabled copies of the extension no longer break the page.** With a
-  Web Store install alongside an unpacked build, both content scripts took
-  the page over: the second replaced the first one's shell, but the first
-  one's scripts still ran, so two viewer instances rendered into the
-  surviving tree. The result was every element drawn twice with dead fold
-  chevrons — two click handlers toggling each row back and forth. The first
-  takeover now wins and later ones stand down.
+- **Two enabled copies of the extension no longer break the page**, such as
+  a store install beside a development build.
 
 ## 0.9.13 — 2026-09-03
 
-### Changed
-- Internal cleanups, no user-visible changes: the toolbar block list finds
-  the document's Products at the root instead of scanning every element,
-  and the ancestor-unfold, clipboard-write and test row-lookup helpers are
-  shared instead of duplicated.
+No user-visible changes.
 
 ## 0.9.12 — 2026-09-03
 
 ### Added
-- **Collapse blocks.** A toolbar button (shortcut `b`) that folds the ONIX
-  block elements inside every `<Product>` — `DescriptiveDetail`,
-  `CollateralDetail`, `ContentDetail`, `PublishingDetail`, `RelatedMaterial`,
-  `ProductSupply`, `PromotionDetail` — and unfolds the Products so each one
-  reads as a short list of blocks. Works in both reference and short-tag
-  dialect.
-- **Block numbers on block rows.** Each ONIX block element directly inside a
-  `<Product>` now carries a `Block N` badge (`<DescriptiveDetail>` → Block 1,
-  … `<PromotionDetail>` → Block 7), in both dialects.
-- **Block list in the toolbar.** When the document holds exactly one Product
-  (a standalone record or a one-product message) the toolbar shows a pill
-  such as `Blocks: 1, 4, 6` listing which blocks the record contains. Hidden
-  for multi-product feeds and acknowledgements, where it would be meaningless.
-- **Visible labels for code-list attributes.** Attribute values drawn from an
-  ONIX code list (`textformat`, `textcase`, `language`, `dateformat`,
-  `sourcetype`, `textscript`) now get a `→ label` chip right after the value,
-  e.g. `<Text textformat="05" → XHTML>`. Previously the label was only
-  available as a hover tooltip.
-- **Drag-select copies plain XML.** Badges, list chips, product summaries,
-  block labels, fold markers and the gutter button are now excluded from text
-  selection, so selecting a stretch of the tree and copying yields only the
-  tags, attributes and text.
+- **Collapse blocks** (`b`) folds the block elements inside every
+  `<Product>`, so each reads as a short list of blocks.
+- **Block numbers**: each ONIX block carries a `Block N` badge.
+- **Block list in the toolbar** for a single-product document:
+  `Blocks: 1, 4, 6`.
+- **Labels for code-list attributes**: `<Text textformat="05" → XHTML>`.
+- **Drag-select copies plain XML**, without badges, chips or summaries.
 
 ## 0.9.11 — 2026-09-03
 
 ### Added
-- **Copy a single node's XML.** Every element row now has a small `⋮` button
-  in the gutter left of the fold chevron (revealed on hover). It opens a
-  dropdown with **Copy node XML**, which puts the element and its whole
-  subtree on the clipboard exactly as it appears in the source — no code-list
-  badges, `List N` chips, fold markers or other viewer decoration. The text is
-  de-indented to the node's own column, and the namespace declaration the
-  serialiser would otherwise add to the subtree root is dropped unless the
-  source element declared it itself, so a copied `<Product>` pastes cleanly
-  back into another ONIX file.
+- **Copy a single node's XML** from the `⋮` button beside each element row.
+  The copy is de-indented and pastes cleanly into another ONIX file.
 
 ## 0.9.10 — 2026-08-17
 
 ### Fixed
-- **Recognise standalone `<Product>` records that have no `<ONIXMessage>`
-  envelope and no namespace.** Such files (e.g. single-record exports, some
-  served as blob URLs) were left to the browser's native view because both
-  the `content.js` activation sniff and `onix.js`'s `detect()` only knew the
-  EDItEUR namespace and `<ONIXMessage>`/`<ONIXMessageAcknowledgement>` roots.
-  A bare `<Product>` root is now treated as ONIX when it carries a
-  corroborating ONIX-specific child (`RecordReference`, `NotificationType`,
-  `ProductIdentifier`, …, or short tags `a001`/`a002`) — generic non-ONIX
-  `<Product>` documents are still left alone. The dialect is inferred from
-  element-name casing; the version is unknown without a namespace, so the
-  toolbar reads `ONIX (N products)` with no version number.
-- **Product summaries no longer drop split-form titles.** `productSummary`
-  read only `<TitleText>` (`b203`), so records using the equally conformant
-  `<TitlePrefix>` + `<TitleWithoutPrefix>` (`b030` / `b031`) form — common in
-  Nordic feeds — showed a summary with no title at all. The prefix and
-  remainder are now joined with a space, and `<NoPrefix/>` records yield just
-  the remainder.
+- **Standalone `<Product>` records with no envelope and no namespace are
+  recognised**, as long as they carry an ONIX-specific child. Other
+  `<Product>` documents are left alone.
+- **Product summaries show split-form titles** (`<TitlePrefix>` +
+  `<TitleWithoutPrefix>`), common in Nordic feeds.
+
 ## 0.9.9 — 2026-06-09
 
 ### Added
-- **Support for the ONIX Acknowledgement message** (root
-  `<ONIXMessageAcknowledgement>`, EDItEUR's optional response format). The
-  extension now detects, takes over, and renders these files; they're
-  labelled `ONIX Acknowledgement 3.0 (N records)` in the toolbar. Their
-  status code-lists — `MessageStatus` (221), `MessageStatusDateRole` (222),
-  `StatusDetailCodeType` (223), `StatusDetailType` (224),
-  `StatusDetailCode` (225) and `RecordStatus` (226) — resolve to readable
-  labels in both reference and short-tag dialects. The code lists were
-  already bundled; only the element→list bindings were added (by hand in
-  `onix.js`, since these elements aren't in the Book Product schema the
-  bindings are generated from).
+- **ONIX Acknowledgement messages** are detected and rendered, labelled
+  `ONIX Acknowledgement 3.0 (N records)`, with their status codes resolved
+  in both dialects.
 
 ## 0.9.8 — 2026-05-28
 
 ### Security
-- **Drop `host_permissions: ["<all_urls>"]`** from the manifest. The only
-  `fetch()` in the bundle is a same-origin re-fetch of the page's own URL,
-  which CORS allows without any extension privilege. Cross-origin fetches
-  from the extension are now CORS-blocked by the browser, not just
-  absent from the code.
-- Add `SECURITY.md` — threat model, exhaustive list of what the extension
-  can and can't do, and how to verify it.
-- `SHORT_TO_REFERENCE` and `ATTR_CODELISTS` in `onix.js` now use
-  `Object.assign(Object.create(null), { … })` so XML-derived keys can't
-  resolve to `Object.prototype` properties (defense-in-depth).
-- Gate the three `console.info` / `console.warn` calls in `content.js`
-  behind a `DEBUG = false` constant.
+- **The extension asks for no host permissions.** Its only request is the
+  page's own URL, fetched again from its own origin.
+- Added `SECURITY.md`: what the extension can and cannot do, and how to
+  verify it.
 
 ### Fixed
-- Product summary now picks the **distinctive title** (the `<TitleDetail>`
-  with `<TitleType>01</TitleType>`), not whichever `<TitleText>` appeared
-  last in a free DFS. Previously, multi-language books surfaced their
-  original-language title instead of the marketed title.
-- Product summary identifier order is now explicit: `15` (ISBN-13) →
-  `03` (GTIN-13) → `02` (ISBN-10) → omit. Previously a fallback would
-  label a proprietary ID as "ISBN".
-- ProductForm / TitleText lookups now restricted to direct children of
-  the appropriate composite — no more leakage of values from
-  `<RelatedProduct>` blocks into the parent's summary chip.
-- `viewer.js` no longer escapes `"` to `&quot;` in attribute-value text
-  (the `textContent` setter already neutralises everything; the replace
-  was producing literal `&quot;` on screen).
-
-### Tests
-- 52 → 56. New fixtures: `onix-3.0-multi-title.xml`,
-  `onix-3.0-gtin-only.xml`, `onix-3.0-isbn10-only.xml`,
-  `onix-3.0-proprietary-only.xml`.
+- **The product summary shows the distinctive title** (`<TitleType>` 01),
+  not whichever title came last.
+- **The product summary never labels a proprietary ID as "ISBN".** It
+  prefers ISBN-13, then GTIN-13, then ISBN-10, and otherwise omits the
+  identifier.
+- **Summaries no longer pick up values from `<RelatedProduct>`.**
+- **Quotes in attribute values** no longer show as `&quot;`.
 
 ## 0.9.7 — 2026-05-25
 
 ### Added
-- **Copy XML** toolbar button — puts the unannotated XML source in the
-  clipboard. Uses `navigator.clipboard.writeText` with a
-  `document.execCommand("copy")` fallback for hostile origins.
+- **Copy XML** puts the XML source on the clipboard.
 
 ## 0.9.6 — 2026-05-25
 
 ### Added
-- Toolbar pill: **"EDItEUR ONIX 3.1, Issue 73"**, driven by a
-  `window.OnixViewerCodeListSchema` constant baked into the generated
-  `onix-codelists.js`.
-- New marquee tile (1400×560) and small promo tile (440×280) using the
-  book + crystal artwork.
+- The toolbar names the code lists: **EDItEUR ONIX 3.1, Issue 73**.
 
 ### Changed
-- Codelists upgraded to **EDItEUR Issue 73** (was 72). 12 new codes.
-- `tools/generate-codelists.js` now consumes EDItEUR's published JSON
-  feed (`tools/data/onix-codelists.json`) rather than regex-parsing the
-  XSD enumerations. Both inputs are committed locally, so the generator
-  has no external dependencies.
-- Drop "parsed in N ms" from the toolbar meta.
-
-### Removed
-- Stale `dist/listing/` assets (old marquee, four promo colour tests).
-- Unused `Resources/icons/onix-viewer-logo.svg` (faceted-eye sketch from
-  an earlier icon round).
+- Codelists upgraded to **EDItEUR Issue 73** (was 72).
 
 ## 0.9.5 — 2026-05-26
 
 ### Changed
-- New icon source: book + crystal artwork (`icons/image.png`). Replaces
-  the faceted-eye `icon.svg`, which is removed.
-- `tools/render-icons.sh` now renders the source edge-to-edge so the
-  icon visually matches other extensions in the Chrome toolbar /
-  extensions page (previous output was too small).
+- A new icon.
 
 ## 0.9.4 — 2026-05-25
 
 ### Added
-- Support `blob:` URLs via `content_scripts.match_origin_as_fallback`
-  (Chrome 119+). Chrome resolves a blob URL's origin to the page that
-  created it and matches that against `<all_urls>`.
+- **`blob:` URLs** are taken over (Chrome 119+).
 
 ## 0.9.3 — 2026-05-25
 
 ### Removed
-- The structure / split view is **disabled in the UI**. The code is
-  still bundled and tested but hidden behind an early-return in
-  `setupViewMode`. To re-enable, restore the `.px-view-group` block in
-  `content.js` and delete the early-return — two-line revert.
+- The structure / split view.
 
 ### Fixed
-- Inline `→ Label` codelist chip and `List N ↗` link chip are now the
-  same height — both rendered as `inline-flex` at 16 px, regardless of
-  whether the chip contains plain text or text + SVG icon.
+- The code-list label and link chips are the same height.
 
 ## 0.9.2 — 2026-05-25
 
-First release through GitHub Actions release-on-tag workflow. Baseline
-shipping version of the simplification: tree-only view, codelist
-resolution, popup, no split-pane.
-
-## Earlier history (pre-0.9.2)
-
-Major architectural milestones before the changelog started:
-
-- **Cross-pane sync.** The right "blocks" pane introduced a per-Product
-  collapsible card, bidirectional collapse-sync with the XML tree,
-  click-to-highlight, and a draggable pane divider. All this code
-  remains and is exercised in tests, but the UI toggle to expose it
-  is currently disabled (see 0.9.3).
-- **Codelists generator.** Switched from a hand-curated 8-list subset
-  (~150 entries) to a generated 165-list bundle (~4,700 entries) from
-  EDItEUR's official feeds, eliminating a class of element-to-list
-  mis-bindings the curated version had.
-- **Tree takeover correctness.** A long detour through XHTML-namespace
-  quirks (createElement returning null-namespace elements when
-  `document.contentType === "application/xml"`), CSP-blocked inline
-  scripts on file:// pages, and Chrome's wrapping of raw XML in
-  `webkit-xml-viewer-source-xml`. The viewer now works for HTTP,
-  file://, and blob: URLs.
-- **Renamed from PrettyXML to ONIX Viewer**, narrowed scope to ONIX
-  detection rather than any-XML viewing, dropped Safari support to
-  focus on Chrome / Chromium.
+The first release: the tree view, code-list resolution and the code-list
+popup, for ONIX served as XML over HTTP, from `file://` and from `blob:`
+URLs.
