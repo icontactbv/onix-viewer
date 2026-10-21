@@ -33,7 +33,7 @@ manual run has to look for. `content.js` is unchanged.
 | Fact | Source |
 |---|---|
 | Apple's converter, `xcrun safari-web-extension-converter`, takes the extension folder and generates an app target plus an extension target (`.appex`) that carries the web extension's files as bundle resources. Without `--copy-resources` the project references the original files by **absolute path** (`path = "../../…/onix-viewer/Resources/content.js"`), which is no good to commit or move; with it the files are copied under the extension target and the paths are relative. It lists files individually, so a file added to `Resources/` needs the project regenerated — which is why the packager regenerates it every time rather than the repo committing it. | Xcode 27.0 (27A266a), run here 2026-09-26 |
-| On this manifest the converter warns about **one key only**, `match_origin_as_fallback` ("not supported by your current version of Safari"), and says nothing about `minimum_chrome_version`, `version_name` or `browser_specific_settings.gecko`. MDN records the key as supported from **Safari 18.4**; **the converter is right.** A `blob:https://example.com/…` page — the way that app hands a reader an ONIX file — gets no content script in Safari 27: the owl stays grey, the console stays empty, while the same profile takes over an `http:` page fine. Chrome and Firefox take blob pages over through this key; **Safari cannot, and nothing in the extension can change it** — a blob URL resolves only inside the origin that made it, so there is no other way in. The key stays in the manifest for the day Safari honours it. | the converter on Safari 27.0; MDN compat data, `content_scripts.json` |
+| On this manifest the converter warns about **one key only**, `match_origin_as_fallback` ("not supported by your current version of Safari"), and says nothing about `minimum_chrome_version`, `version_name` or `browser_specific_settings.gecko`. MDN records the key as supported from **Safari 18.4**; **the converter is right.** A `blob:https://…` page — the way some web apps hand a reader an ONIX file — gets no content script in Safari 27: the owl stays grey, the console stays empty, while the same profile takes over an `http:` page fine. Chrome and Firefox take blob pages over through this key; **Safari cannot, and nothing in the extension can change it** — a blob URL resolves only inside the origin that made it, so there is no other way in. The key stays in the manifest for the day Safari honours it. | the converter on Safari 27.0; MDN compat data, `content_scripts.json` |
 | The converter derives the **app's** bundle identifier from the app name — `--app-name "ONIX Viewer"` gives `io.maendeleo.ONIX-Viewer` whatever `--bundle-identifier` says — and the **extension's** from `--bundle-identifier` plus `.Extension`. Pass anything but the app's own derivation and the build fails at the embed step ("Embedded binary's bundle identifier is not prefixed with the parent app's bundle identifier"), which is why the packager passes `io.maendeleo.ONIX-Viewer`. With that, the generated project **builds** unsigned from the command line (`xcodebuild … CODE_SIGNING_ALLOWED=NO`), producing `ONIX Viewer.app` with `ONIX Viewer Extension.appex` inside it and the manifest and scripts under the appex's `Contents/Resources/`. The Swift in it is boilerplate: an `NSExtensionRequestHandling` handler that echoes native messages, which the extension never sends, and an app with a storyboard whose only job is to exist. | built here 2026-09-26 |
 | The converter pins `MACOSX_DEPLOYMENT_TARGET` to the SDK it ran on (27.0). Safari 18 shipped with macOS 15, so the packager lowers it to 15.0 after generating. | the generated `project.pbxproj` |
 | Content scripts in Safari are **not applied to a site until the user grants the extension access** to it, from the extension's popover in the toolbar; later loads then honour `run_at`. `<all_urls>` becomes a one-time "Always Allow on Every Website" rather than a grant at install, as in Chrome and as in Firefox since 127. Until then the page shows Safari's own XML rendering and nothing tells the reader the extension exists. | MDN compat data, `content_scripts.json` notes |
@@ -132,14 +132,13 @@ macOS 27, the extension loaded as a temporary extension:
 **After the detach change, 2026-09-27**: two cold loads of the 300-product
 feed rendered the viewer with no crash and no kill, so the open question is
 answered — the swap survives the end of the parse in Safari — and what is
-left is speed. loading was sluggish. Safari parses the
+left is speed: loading was sluggish. Safari parses the
 whole feed into the detached root before the re-fetch can resolve, since
 WebKit coalesces it with the page's own download, and it then builds and
 lays out the viewer's 144k rows as Chrome does, only slower. The next step
 was not Safari-specific: Products are now rendered only as they near the
-viewport (see `CLAUDE.md`), and with that in the loaded folder the same
-300-product feed on a cold load was, well —
-load and scrolling both. No Timeline recording was needed.
+viewport, and with that in the loaded folder the same
+300-product feed loaded and scrolled well on a cold load. No Timeline recording was needed.
 
 ### WebKit's tree viewer and a swapped root
 
@@ -226,8 +225,8 @@ a new name in `dist/` for each one. Look for:
    extension — so do this last, with a built app instead, or accept that it
    can only be inferred): the ordinary reader's path.
 4. ~~**A `blob:` URL**~~ — settled: not taken over in Safari 27, see the
-   facts. A web app that opens ONIX as a blob, so in Safari that app's
-   files show as raw XML; in Chrome and Firefox they are taken over.
+   facts. A web app that opens ONIX as a blob shows raw XML in Safari; in
+   Chrome and Firefox it is taken over.
 5. **`file:///…/Onix/onix-3.1-refnames.xml`**, with the extension allowed on
    file URLs if Safari asks: whether the fetch or the fallback carries it.
 6. **The rules editor**: paste the house rules, Apply, and look for "Kept"
@@ -241,7 +240,7 @@ a new name in `dist/` for each one. Look for:
    the `safari-web-extension:` gate, with a jsdom test for the branch
    Chrome takes.
 2. Distribution — below.
-3. `SECURITY.md`, `README.md` and `CLAUDE.md` then say Safari alongside the
+3. `SECURITY.md` and `README.md` then say Safari alongside the
    other two. The manifest `description` says "in Chrome".
 
 ## Distribution

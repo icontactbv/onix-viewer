@@ -5,8 +5,8 @@
 #   tools/publish-site.sh --dry-run   # show what would change and stop
 #   tools/publish-site.sh --ported    # the site's own edits are in site/ now: publish over them
 #
-# The page lives in this repo as site/ and is served from the site-repo
-# repo, which the host deploys from on every push to main. Publishing is
+# The page lives in this repo as site/ and is served from the site repo
+# (its checkout named by $SITE_REPO), which the host deploys from on every push to main. Publishing is
 # therefore a copy into that repo's onix-viewer/ and a push. The copy is a
 # full sync, so a file removed here disappears from the site too.
 #
@@ -23,7 +23,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-SITE_REPO="${SITE_REPO:-$HOME/git/site-repo}"
+SITE_REPO="${SITE_REPO:-}"
 TARGET_DIR="onix-viewer"
 MARKER="onix-viewer@"
 

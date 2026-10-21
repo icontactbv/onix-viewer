@@ -64,7 +64,7 @@ and keeps `minimum_chrome_version` and `version_name`. One directory then
 loads unpacked in either browser — `chrome://extensions` → *Load unpacked*
 → `Resources/`, or `about:debugging#/runtime/this-firefox` → *Load Temporary
 Add-on…* → `Resources/manifest.json` — which is the property the whole
-layout is built around (see *Two icon directories, and why* in `CLAUDE.md`).
+layout is built around.
 Each browser prints a warning about the other's keys on its extensions page;
 the store builds carry neither, below.
 
@@ -116,9 +116,6 @@ because the answers decide the next change.
 
 ## What could not be verified, and the question it hangs on
 
-The test could not be run here: the sandbox forbids
-Firefox from spawning its content processes (`plugin-container.app:
-Operation not permitted`), so puppeteer never sees the WebDriver endpoint.
 Everything below is from reading Gecko's source and needs one real run.
 
 ### The XML pretty-printer and a swapped root

@@ -144,8 +144,6 @@ viewing."
 **Public** — anyone can find and install.
 **Unlisted** — only people with the link.
 **Private** — only members of a configured Google Workspace group.
-For internal use, **Private** is the cleanest fit. Configure the
-group in the dashboard under "Distribution" once the org is connected.
 
 ## Listing assets to prepare
 
