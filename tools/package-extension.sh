@@ -249,7 +249,7 @@ if [ "$DEV" = 0 ]; then
     # and tool config; the README says how to rebuild the zip from it.
     SOURCE="$OUT_DIR/$STEM-source.zip"
     rm -f "$SOURCE"
-    git ls-files -co --exclude-standard | grep -v -E '^(\.idea|\.claude)/' | zip -q -@ "$SOURCE"
+    git ls-files -co --exclude-standard | grep -v -E '^\.idea/' | zip -q -@ "$SOURCE"
     echo "Wrote $SOURCE"
   fi
 fi

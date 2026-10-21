@@ -1,5 +1,5 @@
 // What keeps a large feed usable. jsdom lays nothing out, so the rendering
-// cost itself is measured by hand (see CLAUDE.md); this holds the rule that
+// cost itself is measured by hand; this holds the rule that
 // bought it in place.
 const fs = require("fs");
 const path = require("path");

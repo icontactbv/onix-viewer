@@ -163,8 +163,7 @@
   // 196 when it is 09, and free text under most other types. The classic
   // schema types these value elements as plain strings, so the ordinary
   // bindings cannot know about them; the table is generated from the strict
-  // schema's assertions instead (tools/generate-codelists.js) — see
-  // CLAUDE.md, "Second-order code lists".
+  // schema's assertions instead (tools/generate-codelists.js).
   //
   // Keyed by the value element's reference name, each entry a list of
   // selectors: `type` is the sibling whose code picks the list, `lists` maps

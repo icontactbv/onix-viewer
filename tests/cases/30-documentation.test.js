@@ -5,17 +5,17 @@ const {
 } = require("../harness");
 
 describe("Documentation", () => {
-  // CLAUDE.md's fixture table is kept by hand, and a fixture that is not in it
+  // The fixture table is kept by hand, and a fixture that is not in it
   // is one nobody will know the purpose of. Both directions are held: every
   // file has a row, every row has a file.
-  test("every fixture is in CLAUDE.md's fixture table, and every row has a file", () => {
-    const notes = fs.readFileSync(path.join(ROOT, "CLAUDE.md"), "utf8");
+  test("every fixture is in the fixture table, and every row has a file", () => {
+    const notes = fs.readFileSync(path.join(FIXTURES, "README.md"), "utf8");
     const rows = [...notes.matchAll(/^\| `([a-z0-9.-]+\.xml)` \|/gm)].map((m) => m[1]);
     const files = fs.readdirSync(FIXTURES).filter((f) => f.endsWith(".xml"));
     const undocumented = files.filter((f) => !rows.includes(f));
     const missing = rows.filter((f) => !files.includes(f));
-    assert(undocumented.length === 0, `fixtures with no row in CLAUDE.md: ${undocumented.join(", ")}`);
-    assert(missing.length === 0, `rows in CLAUDE.md with no fixture: ${missing.join(", ")}`);
+    assert(undocumented.length === 0, `fixtures with no row in tests/fixtures/README.md: ${undocumented.join(", ")}`);
+    assert(missing.length === 0, `rows in tests/fixtures/README.md with no fixture: ${missing.join(", ")}`);
   });
 
   // site/ is the extension's web page, copied elsewhere to publish, so it
